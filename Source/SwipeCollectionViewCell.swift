@@ -19,7 +19,7 @@ open class SwipeCollectionViewCell: UICollectionViewCell {
     public weak var delegate: SwipeCollectionViewCellDelegate?
     
     //url of file at specified indexPath in collectionView
-    var fileURL: URL!
+    public var fileURL: URL!
     
     var state = SwipeState.center
     var actionsView: SwipeActionsView?
