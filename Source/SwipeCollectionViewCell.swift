@@ -19,7 +19,7 @@ open class SwipeCollectionViewCell: UICollectionViewCell {
     public weak var delegate: SwipeCollectionViewCellDelegate?
     
     //url of file at specified indexPath in collectionView
-    public var fileURL: URL!
+    public var fileURL: URL?
     
     var state = SwipeState.center
     var actionsView: SwipeActionsView?
@@ -241,12 +241,15 @@ extension SwipeCollectionViewCell: SwipeControllerDelegate {
 //        collectionView?.deleteItems(at: [indexPath])
         
         //FIXME: Hide row at indexPath
+        guard let fileURL = self.fileURL else { return }
         hideFile(at: fileURL)
         print("collectionView?.deleteItems(at: [indexPath])")
         
     }
     
     func hideFile(at: URL) {
+        
+        guard let fileURL = self.fileURL else { return }
         
         let documentsPath = Foundation.FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
