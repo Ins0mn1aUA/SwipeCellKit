@@ -18,6 +18,9 @@ open class SwipeCollectionViewCell: UICollectionViewCell {
     /// The object that acts as the delegate of the `SwipeCollectionViewCell`.
     public weak var delegate: SwipeCollectionViewCellDelegate?
     
+    //url of file at specified indexPath in collectionView
+    var fileURL: URL!
+    
     var state = SwipeState.center
     var actionsView: SwipeActionsView?
     var scrollView: UIScrollView? {
@@ -235,7 +238,56 @@ extension SwipeCollectionViewCell: SwipeControllerDelegate {
     }
     
     func swipeController(_ controller: SwipeController, didDeleteSwipeableAt indexPath: IndexPath) {
-        collectionView?.deleteItems(at: [indexPath])
+//        collectionView?.deleteItems(at: [indexPath])
+        
+        //FIXME: Hide row at indexPath
+        hideFile(at: fileURL)
+        print("collectionView?.deleteItems(at: [indexPath])")
+        
     }
+    
+    func hideFile(at: URL) {
+        
+        let documentsPath = Foundation.FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        let hiddenPath = documentsPath.appendingPathComponent("Hidden")
+        
+        renameWhenMoveFileIfExist(fileName: fileURL.lastPathComponent, atURL: fileURL, toURL: hiddenPath)
+        
+    }
+    
+    func renameWhenMoveFileIfExist(fileName: String, atURL: URL, toURL: URL) {
+        
+        if FileManager.default.fileExists(atPath: toURL.appendingPathComponent(fileName).absoluteString) {
+            
+            let newName = findFreeNameExtension(atURL: toURL, forExistFileName: fileName)
+            
+            do {
+                try FileManager.default.moveItem(at: atURL.appendingPathComponent(fileName),
+                                                 to: toURL.appendingPathComponent(newName))
+                
+            } catch let error as NSError {
+                print("Ooops! Something went wrong: \(error)")
+            }
+            
+        }
+    }
+    
+    func findFreeNameExtension(atURL: URL, forExistFileName: String) -> String {
+        
+        var count = 1
+        
+        let nameExtension = "(\(count))"
+        
+        let newName = forExistFileName + nameExtension
+        
+        while FileManager.default.fileExists(atPath: atURL.appendingPathComponent(newName).absoluteString) {
+            count += 1
+        }
+        
+        return newName
+    }
+    
 }
+
 
