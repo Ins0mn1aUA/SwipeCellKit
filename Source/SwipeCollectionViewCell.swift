@@ -21,8 +21,6 @@ open class SwipeCollectionViewCell: UICollectionViewCell {
     //url of file at specified indexPath in collectionView
     public var fileURL: URL?
     
-    open var hide: ((URL) -> Void)? = nil
-    
     var state = SwipeState.center
     var actionsView: SwipeActionsView?
     var scrollView: UIScrollView? {
@@ -243,10 +241,10 @@ extension SwipeCollectionViewCell: SwipeControllerDelegate {
 //        collectionView?.deleteItems(at: [indexPath])
         
         //FIXME: Hide row at indexPath
-        guard let fileURL = self.fileURL else { return }
+//        guard let fileURL = self.fileURL else { return }
 //        hideFile(at: fileURL)
-        hide?(fileURL)
-        print("collectionView?.deleteItems(at: [indexPath])")
+//        hide?(fileURL)
+        print("called method \"collectionView?.deleteItems(at: [indexPath])\"")
         
     }
     
